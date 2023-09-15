@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "9ad0e56d-1641-4af3-8f09-f633ebcbc25a",
+		"name": "Address PreReq Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29388270",
+		"_collection_link": "https://interstellar-desert-393780.postman.co/workspace/Spreecom_API~e80d592d-cea8-4f3e-976c-1c53b65aa248/collection/29388270-9ad0e56d-1641-4af3-8f09-f633ebcbc25a?action=share&source=collection_link&creator=29388270"
+	},
+	"item": [
+		{
+			"name": "Create Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"store address id\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.globals.set(\"addid\", jsonData.data.id);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"address\": {\r\n    \"firstname\": \"Mark\",\r\n    \"lastname\": \"Winterburn\",\r\n    \"company\": \"Paper Street Soap Co.\",\r\n    \"address1\": \"775 Old Georgetown Road\",\r\n    \"address2\": \"3rd Floor\",\r\n    \"city\": \"Qethesda\",\r\n    \"phone\": \"3488545445002\",\r\n    \"zipcode\": \"90210\",\r\n    \"state_name\": \"CA\",\r\n    \"country_iso\": \"US\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/account/addresses",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"account",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Address",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"address\": {\r\n    \"firstname\": \"CrystalWenApartment\",\r\n    \"lastname\": \"Winterburn\",\r\n    \"company\": \"Paper Street Soap Co.\",\r\n    \"address1\": \"775 Old Georgetown Road\",\r\n    \"address2\": \"3rd Floor\",\r\n    \"city\": \"Qethesda\",\r\n    \"phone\": \"3488545445002\",\r\n    \"zipcode\": \"90210\",\r\n    \"state_name\": \"CA\",\r\n    \"country_iso\": \"US\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/account/addresses/{{addid}}",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"account",
+						"addresses",
+						"{{addid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/account/addresses/{{addid}}",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"account",
+						"addresses",
+						"{{addid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{tokenhaha}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test('Access Token',function(){",
+					"pm.sendRequest({",
+					"    url: 'https://demo.spreecommerce.org/spree_oauth/token',",
+					"    method: 'POST',",
+					"    header: { ",
+					"        \"Content-Type\" : \"application/json\"",
+					"            },",
+					"   body:{",
+					"      mode:'raw',",
+					"      raw: JSON.stringify({",
+					"           \"grant_type\": \"password\",",
+					"    \"username\": \"lti@spree.com\",",
+					"    \"password\": \"spree123\"",
+					"    })",
+					"   }",
+					"},",
+					"    function(err,response) {",
+					"        console.log(response);",
+					"        let responsejson = response.json();",
+					"        pm.globals.set('tokenhaha',responsejson.access_token);",
+					"    }",
+					")",
+					"    });"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

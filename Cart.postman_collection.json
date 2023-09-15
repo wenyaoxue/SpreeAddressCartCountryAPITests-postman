@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "eaffa037-2df8-4d91-a3a7-48e4505642a2",
+		"name": "Cart",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29388270",
+		"_collection_link": "https://interstellar-desert-393780.postman.co/workspace/Spreecom_API~e80d592d-cea8-4f3e-976c-1c53b65aa248/collection/29388270-eaffa037-2df8-4d91-a3a7-48e4505642a2?action=share&source=collection_link&creator=29388270"
+	},
+	"item": [
+		{
+			"name": "Spree Oauth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"store\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.globals.set(\"token\", jsonData.access_token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"username\": \"c@s.com\",\r\n  \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://demo.spreecommerce.org/spree_oauth/token",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"spree_oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"store cart token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.globals.set(\"cart_token\", jsonData.data.attributes.token);\r",
+							"});\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/cart",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://demo.spreecommerce.org/api/v2/storefront/checkout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Spree-Order-Token",
+						"value": "{{cart_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"order\": {\r\n    \"email\": \"john@snow.org\",\r\n    \"bill_address_attributes\": {\r\n      \"firstname\": \"John\",\r\n      \"lastname\": \"Snow\",\r\n      \"address1\": \"7735 Old Georgetown Road\",\r\n      \"city\": \"Bethesda\",\r\n      \"phone\": \"3014445002\",\r\n      \"zipcode\": \"20814\",\r\n      \"state_name\": \"MD\",\r\n      \"country_iso\": \"US\"\r\n    },\r\n    \"ship_address_attributes\": {\r\n      \"firstname\": \"John\",\r\n      \"lastname\": \"Snow\",\r\n      \"address1\": \"7735 Old Georgetown Road\",\r\n      \"city\": \"Bethesda\",\r\n      \"phone\": \"3014445002\",\r\n      \"zipcode\": \"20814\",\r\n      \"state_name\": \"MD\",\r\n      \"country_iso\": \"US\"\r\n    }\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/checkout",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{cart_token}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "X-Spree-Order-Token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Spree-Order-Token",
+						"value": "{{cart_token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/cart",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Spree-Order-Token",
+						"value": "{{cart_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/cart",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

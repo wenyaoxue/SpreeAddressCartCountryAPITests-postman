@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "52109f31-ae81-4063-b0ab-0e5c4820733e",
+		"name": "Countries DataDriven",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29388270",
+		"_collection_link": "https://interstellar-desert-393780.postman.co/workspace/Spreecom_API~e80d592d-cea8-4f3e-976c-1c53b65aa248/collection/29388270-52109f31-ae81-4063-b0ab-0e5c4820733e?action=share&source=collection_link&creator=29388270"
+	},
+	"item": [
+		{
+			"name": "Get Country",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var isoname = pm.variables.get(\"iso_name\");\r",
+							"\r",
+							"pm.test(\"Check country name =\" +isoname, function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.attributes.iso_name).to.eql(isoname);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/countries/{{CountryName}}",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"countries",
+						"{{CountryName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Default Country",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"USA\");\r",
+							"});\r",
+							"pm.test(\"Your test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.attributes.iso3).to.eql(\"USA\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://demo.spreecommerce.org/api/v2/storefront/countries/default",
+					"protocol": "https",
+					"host": [
+						"demo",
+						"spreecommerce",
+						"org"
+					],
+					"path": [
+						"api",
+						"v2",
+						"storefront",
+						"countries",
+						"default"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
